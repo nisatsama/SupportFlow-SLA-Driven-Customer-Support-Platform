@@ -12,6 +12,8 @@ app.use(
 );
 app.use(express.json());
 const AuthRoutes = require("./routes/AuthRoutes");
+const DashBoardRoutes = require("./routes/DashBoardRoutes");
+app.use("/api/dashboard", DashBoardRoutes);
 app.use("/api/auth", AuthRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World");
