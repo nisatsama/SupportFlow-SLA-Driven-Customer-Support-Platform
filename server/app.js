@@ -16,17 +16,15 @@ app.use("/api/auth", AuthRoutes);
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
-const MONGO_URI =
-  // process.env.MONGO_URI ||
-  // "mongodb+srv://heLp_desk_db:abcd1234@ecommerce-cluster.cwliozz.mongodb.net/";
-  mongoose
-    .connect(MONGO_URI)
-    .then(() => {
-      console.log("✅ Connected to DB");
-    })
-    .catch((err) => {
-      console.log("❌ Error connecting to DB", err);
-    });
+const MONGO_URI = process.env.MONGO_URI;
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log("✅ Connected to DB");
+  })
+  .catch((err) => {
+    console.log("❌ Error connecting to DB", err);
+  });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
