@@ -9,7 +9,7 @@ import Dashboard from "./components/Dashboard";
 import UserDashboard from "./pages/DashboardPage/UserDashboard";
 import AdminDashboard from "./pages/DashboardPage/AdminDashboard";
 import SupportDashboard from "./pages/DashboardPage/SupportDashboard";
-
+import TicketDetails from "./pages/TicketDetailsPage/TicketDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -53,6 +53,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/dashboard/tickets/:id" element={<TicketDetails />} />
       </Routes>
     </BrowserRouter>
   );

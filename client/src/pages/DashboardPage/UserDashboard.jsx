@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./UserDashboard.css";
 const UserDashboard = () => {
+  const navigate = useNavigate();
   // ==========================================
   // STATE
   // ==========================================
@@ -70,7 +72,7 @@ const UserDashboard = () => {
       setFetchingTickets(true);
       setError("");
 
-      const response = await fetch("http://localhost:5000/api/tickets", {
+      const response = await fetch("http://localhost:3000/api/tickets", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -124,7 +126,7 @@ const UserDashboard = () => {
     try {
       setLoading(true);
 
-      const response = await fetch("http://localhost:5000/api/tickets", {
+      const response = await fetch("http://localhost:3000/api/tickets", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -510,10 +512,12 @@ const UserDashboard = () => {
                   {tickets.map((ticket) => (
                     <tr
                       key={ticket._id}
-                      className="border-t hover:bg-gray-50 transition"
+                      onClick={() =>
+                        navigate(`/dashboard/tickets/${ticket._id}`)
+                      }
+                      className="border-t hover:bg-indigo-50 transition cursor-pointer"
                     >
                       {/* TITLE */}
-
                       <td className="px-6 py-4">
                         <p className="font-medium text-gray-800">
                           {ticket.title}
@@ -525,56 +529,47 @@ const UserDashboard = () => {
                       </td>
 
                       {/* DEPARTMENT */}
-
                       <td className="px-6 py-4 text-gray-600 capitalize">
                         {ticket.department}
                       </td>
 
                       {/* PRIORITY */}
-
                       <td className="px-6 py-4">
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-medium capitalize
-                          
-                          ${
-                            ticket.priority === "low"
-                              ? "bg-green-100 text-green-700"
-                              : ticket.priority === "medium"
-                                ? "bg-blue-100 text-blue-700"
-                                : ticket.priority === "high"
-                                  ? "bg-orange-100 text-orange-700"
-                                  : "bg-red-100 text-red-700"
-                          }
-                          `}
+          ${
+            ticket.priority === "low"
+              ? "bg-green-100 text-green-700"
+              : ticket.priority === "medium"
+                ? "bg-blue-100 text-blue-700"
+                : ticket.priority === "high"
+                  ? "bg-orange-100 text-orange-700"
+                  : "bg-red-100 text-red-700"
+          }`}
                         >
                           {ticket.priority}
                         </span>
                       </td>
 
                       {/* STATUS */}
-
                       <td className="px-6 py-4">
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-medium capitalize
-
-                          ${
-                            ticket.status === "open"
-                              ? "bg-blue-100 text-blue-700"
-                              : ticket.status === "in-progress"
-                                ? "bg-yellow-100 text-yellow-700"
-                                : ticket.status === "resolved"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-gray-100 text-gray-700"
-                          }
-
-                          `}
+          ${
+            ticket.status === "open"
+              ? "bg-blue-100 text-blue-700"
+              : ticket.status === "in-progress"
+                ? "bg-yellow-100 text-yellow-700"
+                : ticket.status === "resolved"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-gray-100 text-gray-700"
+          }`}
                         >
                           {ticket.status.replace("-", " ")}
                         </span>
                       </td>
 
                       {/* CREATED DATE */}
-
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {new Date(ticket.createdAt).toLocaleDateString()}
                       </td>
