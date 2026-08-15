@@ -13,6 +13,9 @@ app.use(
 app.use(express.json());
 const AuthRoutes = require("./routes/AuthRoutes");
 const DashBoardRoutes = require("./routes/DashBoardRoutes");
+const TicketRoutes = require("./routes/TicketRoutes");
+
+app.use("/api/tickets", TicketRoutes);
 app.use("/api/dashboard", DashBoardRoutes);
 app.use("/api/auth", AuthRoutes);
 app.get("/", (req, res) => {
