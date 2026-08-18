@@ -42,6 +42,28 @@ const ticketSchema = new mongoose.Schema(
       enum: ["open", "in-progress", "resolved", "closed"],
       default: "open",
     },
+
+    attachment: {
+      url: {
+        type: String,
+        default: null,
+      },
+
+      publicId: {
+        type: String,
+        default: null,
+      },
+
+      fileType: {
+        type: String,
+        default: null,
+      },
+
+      fileName: {
+        type: String,
+        default: null,
+      },
+    },
   },
   {
     timestamps: true,

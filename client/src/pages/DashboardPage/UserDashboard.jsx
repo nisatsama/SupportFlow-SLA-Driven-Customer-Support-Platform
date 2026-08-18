@@ -126,28 +126,42 @@ const UserDashboard = () => {
     try {
       setLoading(true);
 
+      // ==========================================
+      // CREATE FORM DATA
+      // ==========================================
+
+      const data = new FormData();
+
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("department", formData.department);
+      data.append("priority", formData.priority);
+
+      // Add attachment only if user selected one
+      if (attachment) {
+        data.append("attachment", attachment);
+      }
+
+      // ==========================================
+      // SEND REQUEST
+      // ==========================================
+
       const response = await fetch("http://localhost:3000/api/tickets", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          title: formData.title,
-          description: formData.description,
-          department: formData.department,
-          priority: formData.priority,
-        }),
+        body: data,
       });
 
-      const data = await response.json();
+      const dataResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create ticket");
+        throw new Error(dataResponse.message || "Failed to create ticket");
       }
 
       // Add newly created ticket to UI
-      setTickets((prev) => [data.ticket, ...prev]);
+      setTickets((prev) => [dataResponse.ticket, ...prev]);
 
       // Success message
       setSuccess("Ticket created successfully! 🎫");
@@ -161,6 +175,9 @@ const UserDashboard = () => {
       });
 
       setAttachment(null);
+
+      // Reset file input
+      e.target.reset();
 
       // Close form
       setShowCreateForm(false);
@@ -386,15 +403,16 @@ const UserDashboard = () => {
                   className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   required
                 >
-                  <option value="">Select Department</option>
-
-                  <option value="technical">Technical Support</option>
-
-                  <option value="billing">Billing</option>
-
-                  <option value="account">Account Support</option>
-
-                  <option value="general">General Support</option>
+                  <option value="">Select Department</option>{" "}
+                  <option value="it-support">IT Support</option>{" "}
+                  <option value="network">Network</option>{" "}
+                  <option value="hardware">Hardware</option>{" "}
+                  <option value="hostel">Hostel</option>{" "}
+                  <option value="library">Library</option>{" "}
+                  <option value="accounts">Accounts</option>{" "}
+                  <option value="examination">Examination</option>{" "}
+                  <option value="software-bug">Software Bug</option>{" "}
+                  <option value="other">Other</option>
                 </select>
               </div>
 

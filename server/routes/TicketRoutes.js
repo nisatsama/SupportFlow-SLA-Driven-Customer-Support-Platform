@@ -9,7 +9,8 @@ const {
 } = require("../controller/TicketController");
 const AuthMiddleware = require("../middleware/AuthMiddleware");
 // CREATE
-router.post("/", AuthMiddleware, createTicket);
+const upload = require("../middleware/upload");
+router.post("/", AuthMiddleware, upload.single("attachment"), createTicket);
 // READ ALL
 router.get("/", AuthMiddleware, getTickets);
 // READ ONE

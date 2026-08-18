@@ -1,5 +1,5 @@
 const Ticket = require("../model/Ticket");
-
+const cloudinary = require("../config/cloudinary");
 // ==========================================
 // CREATE TICKET
 // POST /api/tickets
@@ -8,6 +8,34 @@ const Ticket = require("../model/Ticket");
 const createTicket = async (req, res) => {
   try {
     const { title, description, department, priority } = req.body;
+    let attachment = null;
+
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "helpomania/tickets",
+            resource_type: "auto",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          },
+        );
+
+        uploadStream.end(req.file.buffer);
+      });
+
+      attachment = {
+        url: result.secure_url,
+        publicId: result.public_id,
+        fileType: req.file.mimetype,
+        fileName: req.file.originalname,
+      };
+    }
 
     // ------------------------------------------
     // Basic validation
@@ -33,6 +61,7 @@ const createTicket = async (req, res) => {
       department,
       priority,
       createdBy: req.user.userId,
+      attachment,
     });
 
     // Populate user information before returning
