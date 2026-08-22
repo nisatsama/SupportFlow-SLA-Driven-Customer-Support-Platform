@@ -6,6 +6,29 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Department {
+  IT
+  HR
+  Finance
+  Administration
+  Sales
+  Marketing
+}
+
+enum TicketPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum TicketStatus {
+  open
+  in_progress
+  resolved
+  closed
+}
+
 model User {
   id         Int      @id @default(autoincrement())
   name       String
@@ -16,4 +39,43 @@ model User {
   phone      String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  createdTickets Ticket[] @relation("CreatedTickets")
+}
+
+model Support {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  department String
+  phone      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tickets Ticket[] @relation("AssignedTickets")
+}
+
+model Ticket {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+
+  createdById Int
+  createdBy   User @relation("CreatedTickets", fields: [createdById], references: [id])
+
+  assignedToId Int?
+  assignedTo   Support? @relation("AssignedTickets", fields: [assignedToId], references: [id])
+
+  department Department
+  priority   TicketPriority @default(medium)
+  status     TicketStatus   @default(open)
+
+  attachmentUrl      String?
+  attachmentPublicId String?
+  attachmentFileType String?
+  attachmentFileName String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
