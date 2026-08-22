@@ -22,13 +22,14 @@ const ticketSchema = new mongoose.Schema(
 
     assignedTo: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Support",
       default: null,
     },
 
     department: {
       type: String,
       required: true,
+      enum: ["IT", "HR", "Finance", "Administration", "Sales", "Marketing"],
     },
 
     priority: {
