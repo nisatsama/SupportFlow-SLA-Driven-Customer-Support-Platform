@@ -1,8 +1,6 @@
-const User = require("../model/User");
+const prisma = require("../prisma");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
-// ==================== REGISTER ====================
 
 const register = async (req, res) => {
   try {
@@ -15,9 +13,11 @@ const register = async (req, res) => {
       });
     }
 
-    // 2. Check if user already exists
-    const existingUser = await User.findOne({ email });
-
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
     if (existingUser) {
       return res.status(409).json({
         message: "User with this email already exists",
@@ -25,33 +25,22 @@ const register = async (req, res) => {
     }
 
     // 3. Create user
-    const user = await User.create({
-      name,
-      email,
-      password,
-      department,
-      phone,
-      role: "user",
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password,
+        department,
+        phone,
+        role: "user",
+      },
     });
 
-    // // 4. Generate JWT
-    // const token = jwt.sign(
-    //   {
-    //     userId: user._id,
-    //     role: user.role,
-    //   },
-    //   process.env.JWT_SECRET,
-    //   {
-    //     expiresIn: "1d",
-    //   },
-    // );
-
-    // 5. Send response
     res.status(201).json({
       message: "Registration successful",
       // token,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -67,8 +56,6 @@ const register = async (req, res) => {
   }
 };
 
-// ==================== LOGIN ====================
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -80,16 +67,17 @@ const login = async (req, res) => {
       });
     }
 
-    // 2. Find user by email
-    const user = await User.findOne({ email });
-
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
     if (!user) {
       return res.status(401).json({
         message: "Invalid email or password",
       });
     }
 
-    // 3. Compare entered password with hashed password
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
@@ -101,7 +89,7 @@ const login = async (req, res) => {
     // 4. Generate JWT
     const token = jwt.sign(
       {
-        userId: user._id,
+        userId: user.id,
         role: user.role,
       },
       process.env.JWT_SECRET,
@@ -110,12 +98,11 @@ const login = async (req, res) => {
       },
     );
 
-    // 5. Send response
     res.status(200).json({
       message: "Login successful",
       token,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
