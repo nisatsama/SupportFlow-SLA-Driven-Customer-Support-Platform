@@ -21,9 +21,7 @@ const TicketDetails = () => {
 
         const token = localStorage.getItem("token");
 
-        const response = await fetch(
-          `http://localhost:3000/api/tickets/${id}`,
-          {
+        const response = await fetch(`/api/tickets/${id}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

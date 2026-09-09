@@ -1,0 +1,8 @@
+{
+  "name": "HelpDesk Ticket Management System",
+  "description": "A centralized help desk platform where users can raise support tickets, track progress, and communicate with support teams.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

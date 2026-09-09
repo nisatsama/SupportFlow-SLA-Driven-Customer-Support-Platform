@@ -1,6 +1,8 @@
 const prisma = require("../prisma");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
+
+const JWT_SECRET = process.env.JWT_SECRET || "helpdesk-secret-key-2026";
 
 const register = async (req, res) => {
   try {
@@ -24,12 +26,15 @@ const register = async (req, res) => {
       });
     }
 
+    // 2. Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // 3. Create user
     const user = await prisma.user.create({
       data: {
         name,
         email,
-        password,
+        password: hashedPassword,
         department,
         phone,
         role: "user",
@@ -38,9 +43,9 @@ const register = async (req, res) => {
 
     res.status(201).json({
       message: "Registration successful",
-      // token,
       user: {
-        id: user.id,
+        id: user.id || user._id,
+        _id: user._id || user.id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -78,7 +83,7 @@ const login = async (req, res) => {
       });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    const isPasswordCorrect = (await bcrypt.compare(password, user.password)) || (password === user.password);
 
     if (!isPasswordCorrect) {
       return res.status(401).json({
@@ -89,10 +94,10 @@ const login = async (req, res) => {
     // 4. Generate JWT
     const token = jwt.sign(
       {
-        userId: user.id,
+        userId: user.id || user._id,
         role: user.role,
       },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       {
         expiresIn: "1d",
       },
@@ -102,7 +107,8 @@ const login = async (req, res) => {
       message: "Login successful",
       token,
       user: {
-        id: user.id,
+        id: user.id || user._id,
+        _id: user._id || user.id,
         name: user.name,
         email: user.email,
         role: user.role,

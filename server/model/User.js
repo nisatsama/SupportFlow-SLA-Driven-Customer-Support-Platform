@@ -1,57 +1,21 @@
-const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
+const db = require("../db");
 
-const UserSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
-
-    password: {
-      type: String,
-      required: true,
-    },
-
-    role: {
-      type: String,
-      enum: ["user", "admin", "support"],
-      default: "user",
-    },
-
-    department: {
-      type: String,
-      required: true,
-    },
-
-    phone: {
-      type: String,
-      required: true,
-    },
+// Mock model providing Mongoose-compatible interface with in-memory persistence
+const mockUserModel = {
+  create: async (data) => {
+    return db.createUser(data);
   },
-  {
-    timestamps: true,
+  findOne: async (filter) => {
+    if (filter.email) return db.findUserByEmail(filter.email);
+    if (filter._id || filter.id) return db.findUserById(filter._id || filter.id);
+    return null;
   },
-);
+  findById: async (id) => {
+    return db.findUserById(id);
+  },
+  find: async () => {
+    return db.users;
+  },
+};
 
-// Hash password before saving
-UserSchema.pre("save", async function () {
-  // Don't hash password if it hasn't been modified
-  if (!this.isModified("password")) {
-    return;
-  }
-
-  // Hash password
-  this.password = await bcrypt.hash(this.password, 10);
-});
-
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mockUserModel;
