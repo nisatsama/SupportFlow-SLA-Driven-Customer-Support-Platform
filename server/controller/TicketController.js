@@ -1,6 +1,5 @@
 const Ticket = require("../model/Ticket");
 const cloudinary = require("../config/cloudinary");
-
 // ==========================================
 // CREATE TICKET
 // POST /api/tickets
@@ -12,54 +11,30 @@ const createTicket = async (req, res) => {
     let attachment = null;
 
     if (req.file) {
-      if (
-        process.env.CLOUDINARY_CLOUD_NAME &&
-        process.env.CLOUDINARY_API_KEY &&
-        process.env.CLOUDINARY_API_SECRET
-      ) {
-        try {
-          const result = await new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream(
-              {
-                folder: "helpomania/tickets",
-                resource_type: "auto",
-              },
-              (error, result) => {
-                if (error) {
-                  reject(error);
-                } else {
-                  resolve(result);
-                }
-              },
-            );
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "helpomania/tickets",
+            resource_type: "auto",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          },
+        );
 
-            uploadStream.end(req.file.buffer);
-          });
+        uploadStream.end(req.file.buffer);
+      });
 
-          attachment = {
-            url: result.secure_url,
-            publicId: result.public_id,
-            fileType: req.file.mimetype,
-            fileName: req.file.originalname,
-          };
-        } catch (uploadErr) {
-          console.warn("Cloudinary upload failed, using fallback data URI:", uploadErr.message);
-          attachment = {
-            url: `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
-            publicId: "local_" + Date.now(),
-            fileType: req.file.mimetype,
-            fileName: req.file.originalname,
-          };
-        }
-      } else {
-        // Cloudinary not configured: store as data URI
-        attachment = {
-          url: `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
-          publicId: "local_" + Date.now(),
-          fileType: req.file.mimetype,
-          fileName: req.file.originalname,
-        };
-      }
+      attachment = {
+        url: result.secure_url,
+        publicId: result.public_id,
+        fileType: req.file.mimetype,
+        fileName: req.file.originalname,
+      };
     }
 
     // ------------------------------------------
@@ -75,12 +50,16 @@ const createTicket = async (req, res) => {
     // ------------------------------------------
     // Create ticket
     // ------------------------------------------
+    // IMPORTANT:
+    // createdBy comes from the JWT.
+    // NEVER trust createdBy from req.body.
+    // ------------------------------------------
 
     const ticket = await Ticket.create({
       title,
       description,
       department,
-      priority: priority || "medium",
+      priority,
       createdBy: req.user.userId,
       attachment,
     });
@@ -106,10 +85,25 @@ const createTicket = async (req, res) => {
 // GET TICKETS
 // GET /api/tickets
 // ==========================================
+//
+// USER:
+//     Get only tickets created by themselves
+//
+// SUPPORT:
+//     Get only tickets assigned to themselves
+//
+// ADMIN:
+//     Get all tickets
+//
+// ==========================================
 
 const getTickets = async (req, res) => {
   try {
     let tickets;
+
+    // ------------------------------------------
+    // USER
+    // ------------------------------------------
 
     if (req.user.role === "user") {
       tickets = await Ticket.find({
@@ -118,19 +112,34 @@ const getTickets = async (req, res) => {
         .populate("createdBy", "name email role")
         .populate("assignedTo", "name email role")
         .sort({ createdAt: -1 });
-    } else if (req.user.role === "support") {
+    }
+
+    // ------------------------------------------
+    // SUPPORT
+    // ------------------------------------------
+    else if (req.user.role === "support") {
       tickets = await Ticket.find({
         assignedTo: req.user.userId,
       })
         .populate("createdBy", "name email role")
         .populate("assignedTo", "name email role")
         .sort({ createdAt: -1 });
-    } else if (req.user.role === "admin") {
+    }
+
+    // ------------------------------------------
+    // ADMIN
+    // ------------------------------------------
+    else if (req.user.role === "admin") {
       tickets = await Ticket.find()
         .populate("createdBy", "name email role")
         .populate("assignedTo", "name email role")
         .sort({ createdAt: -1 });
-    } else {
+    }
+
+    // ------------------------------------------
+    // Unknown role
+    // ------------------------------------------
+    else {
       return res.status(403).json({
         message: "Invalid user role",
       });
@@ -155,12 +164,27 @@ const getTickets = async (req, res) => {
 // GET SINGLE TICKET
 // GET /api/tickets/:id
 // ==========================================
+//
+// USER:
+//     Can view only their own ticket
+//
+// SUPPORT:
+//     Can view only tickets assigned to them
+//
+// ADMIN:
+//     Can view any ticket
+//
+// ==========================================
 
 const getTicketById = async (req, res) => {
   try {
     const { id } = req.params;
 
     let ticket;
+
+    // ------------------------------------------
+    // USER
+    // ------------------------------------------
 
     if (req.user.role === "user") {
       ticket = await Ticket.findOne({
@@ -169,32 +193,46 @@ const getTicketById = async (req, res) => {
       })
         .populate("createdBy", "name email role")
         .populate("assignedTo", "name email role");
-    } else if (req.user.role === "support") {
+    }
+
+    // ------------------------------------------
+    // SUPPORT
+    // ------------------------------------------
+    else if (req.user.role === "support") {
       ticket = await Ticket.findOne({
         _id: id,
         assignedTo: req.user.userId,
       })
         .populate("createdBy", "name email role")
         .populate("assignedTo", "name email role");
-    } else if (req.user.role === "admin") {
+    }
+
+    // ------------------------------------------
+    // ADMIN
+    // ------------------------------------------
+    else if (req.user.role === "admin") {
       ticket = await Ticket.findById(id)
         .populate("createdBy", "name email role")
         .populate("assignedTo", "name email role");
-    } else {
+    }
+
+    // ------------------------------------------
+    // Unknown role
+    // ------------------------------------------
+    else {
       return res.status(403).json({
         message: "Invalid user role",
       });
     }
 
+    // ------------------------------------------
+    // Ticket not found OR not accessible
+    // ------------------------------------------
+
     if (!ticket) {
       return res.status(404).json({
         message: "Ticket not found or you do not have access to this ticket",
       });
-    }
-
-    // Ensure attachments array exists for UI components expecting it
-    if (ticket.attachment && !ticket.attachments) {
-      ticket.attachments = [ticket.attachment];
     }
 
     return res.status(200).json({
@@ -215,6 +253,18 @@ const getTicketById = async (req, res) => {
 // UPDATE TICKET
 // PUT /api/tickets/:id
 // ==========================================
+//
+// USER:
+//     Can update title, description, department,
+//     priority of their own ticket.
+//
+// SUPPORT:
+//     Can update status of assigned ticket.
+//
+// ADMIN:
+//     Can update everything.
+//
+// ==========================================
 
 const updateTicket = async (req, res) => {
   try {
@@ -222,6 +272,10 @@ const updateTicket = async (req, res) => {
 
     const { title, description, department, priority, status, assignedTo } =
       req.body;
+
+    // ------------------------------------------
+    // Find ticket
+    // ------------------------------------------
 
     const ticket = await Ticket.findById(id);
 
@@ -231,16 +285,20 @@ const updateTicket = async (req, res) => {
       });
     }
 
-    const createdById = ticket.createdBy
-      ? (ticket.createdBy._id || ticket.createdBy.id || ticket.createdBy).toString()
-      : "";
+    // ==========================================
+    // USER
+    // ==========================================
 
     if (req.user.role === "user") {
-      if (createdById !== req.user.userId.toString()) {
+      // User can only modify their own tickets
+
+      if (ticket.createdBy.toString() !== req.user.userId.toString()) {
         return res.status(403).json({
           message: "You are not allowed to update this ticket",
         });
       }
+
+      // User cannot modify assignment or status
 
       if (assignedTo !== undefined || status !== undefined) {
         return res.status(403).json({
@@ -248,46 +306,121 @@ const updateTicket = async (req, res) => {
         });
       }
 
-      if (title !== undefined) ticket.title = title;
-      if (description !== undefined) ticket.description = description;
-      if (department !== undefined) ticket.department = department;
-      if (priority !== undefined) ticket.priority = priority;
-    } else if (req.user.role === "support") {
-      const assignedToId = ticket.assignedTo
-        ? (ticket.assignedTo._id || ticket.assignedTo.id || ticket.assignedTo).toString()
-        : "";
+      // Update allowed fields
 
-      if (!assignedToId || assignedToId !== req.user.userId.toString()) {
+      if (title !== undefined) {
+        ticket.title = title;
+      }
+
+      if (description !== undefined) {
+        ticket.description = description;
+      }
+
+      if (department !== undefined) {
+        ticket.department = department;
+      }
+
+      if (priority !== undefined) {
+        ticket.priority = priority;
+      }
+    }
+
+    // ==========================================
+    // SUPPORT
+    // ==========================================
+    else if (req.user.role === "support") {
+      // Support can modify only tickets
+      // assigned to them
+
+      if (
+        !ticket.assignedTo ||
+        ticket.assignedTo.toString() !== req.user.userId.toString()
+      ) {
         return res.status(403).json({
           message: "You can only update tickets assigned to you",
         });
       }
 
-      if (title !== undefined) ticket.title = title;
-      if (description !== undefined) ticket.description = description;
-      if (department !== undefined) ticket.department = department;
-      if (priority !== undefined) ticket.priority = priority;
-      if (status !== undefined) ticket.status = status;
+      // Support cannot change ownership
+
+      if (title !== undefined) {
+        ticket.title = title;
+      }
+
+      if (description !== undefined) {
+        ticket.description = description;
+      }
+
+      if (department !== undefined) {
+        ticket.department = department;
+      }
+
+      if (priority !== undefined) {
+        ticket.priority = priority;
+      }
+
+      // Support can update status
+
+      if (status !== undefined) {
+        ticket.status = status;
+      }
+
+      // Support cannot assign tickets
 
       if (assignedTo !== undefined) {
         return res.status(403).json({
           message: "Only admin can assign tickets",
         });
       }
-    } else if (req.user.role === "admin") {
-      if (title !== undefined) ticket.title = title;
-      if (description !== undefined) ticket.description = description;
-      if (department !== undefined) ticket.department = department;
-      if (priority !== undefined) ticket.priority = priority;
-      if (status !== undefined) ticket.status = status;
-      if (assignedTo !== undefined) ticket.assignedTo = assignedTo;
-    } else {
+    }
+
+    // ==========================================
+    // ADMIN
+    // ==========================================
+    else if (req.user.role === "admin") {
+      // Admin can update everything
+
+      if (title !== undefined) {
+        ticket.title = title;
+      }
+
+      if (description !== undefined) {
+        ticket.description = description;
+      }
+
+      if (department !== undefined) {
+        ticket.department = department;
+      }
+
+      if (priority !== undefined) {
+        ticket.priority = priority;
+      }
+
+      if (status !== undefined) {
+        ticket.status = status;
+      }
+
+      if (assignedTo !== undefined) {
+        ticket.assignedTo = assignedTo;
+      }
+    }
+
+    // ==========================================
+    // INVALID ROLE
+    // ==========================================
+    else {
       return res.status(403).json({
         message: "Invalid user role",
       });
     }
 
+    // ------------------------------------------
+    // Save updated ticket
+    // ------------------------------------------
+
     await ticket.save();
+
+    // Populate references
 
     await ticket.populate("createdBy", "name email role");
     await ticket.populate("assignedTo", "name email role");
@@ -310,16 +443,32 @@ const updateTicket = async (req, res) => {
 // DELETE TICKET
 // DELETE /api/tickets/:id
 // ==========================================
+//
+// ONLY ADMIN SHOULD BE ABLE TO DELETE.
+//
+// Role middleware should ALSO protect this
+// route, but we check here as an additional
+// layer of protection.
+//
+// ==========================================
 
 const deleteTicket = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // ------------------------------------------
+    // Only admin can delete
+    // ------------------------------------------
 
     if (req.user.role !== "admin") {
       return res.status(403).json({
         message: "Only admin can delete tickets",
       });
     }
+
+    // ------------------------------------------
+    // Find ticket
+    // ------------------------------------------
 
     const ticket = await Ticket.findById(id);
 
@@ -328,6 +477,10 @@ const deleteTicket = async (req, res) => {
         message: "Ticket not found",
       });
     }
+
+    // ------------------------------------------
+    // Delete ticket
+    // ------------------------------------------
 
     await Ticket.findByIdAndDelete(id);
 
@@ -343,6 +496,10 @@ const deleteTicket = async (req, res) => {
     });
   }
 };
+
+// ==========================================
+// EXPORT CONTROLLERS
+// ==========================================
 
 module.exports = {
   createTicket,

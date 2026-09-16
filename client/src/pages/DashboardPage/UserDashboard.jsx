@@ -63,45 +63,44 @@ const UserDashboard = () => {
   };
 
   // ==========================================
+  // FETCH USER'S TICKETS
+  // GET /api/tickets
+  // ==========================================
+
+  const fetchTickets = async () => {
+    try {
+      setFetchingTickets(true);
+      setError("");
+
+      const response = await fetch("http://localhost:3000/api/tickets", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch tickets");
+      }
+
+      setTickets(data.tickets || []);
+    } catch (error) {
+      console.error("Fetch tickets error:", error);
+      setError(error.message);
+    } finally {
+      setFetchingTickets(false);
+    }
+  };
+
+  // ==========================================
   // FETCH TICKETS WHEN DASHBOARD LOADS
   // ==========================================
 
   useEffect(() => {
-    let isMounted = true;
-    const loadTickets = async () => {
-      try {
-        setError("");
-        const response = await fetch("/api/tickets", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch tickets");
-        }
-        if (isMounted) {
-          setTickets(data.tickets || []);
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error("Fetch tickets error:", err);
-          setError(err.message);
-        }
-      } finally {
-        if (isMounted) {
-          setFetchingTickets(false);
-        }
-      }
-    };
-
-    loadTickets();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [token]);
+    fetchTickets();
+  }, []);
 
   // ==========================================
   // CREATE TICKET
@@ -147,7 +146,7 @@ const UserDashboard = () => {
       // SEND REQUEST
       // ==========================================
 
-      const response = await fetch("/api/tickets", {
+      const response = await fetch("http://localhost:3000/api/tickets", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
