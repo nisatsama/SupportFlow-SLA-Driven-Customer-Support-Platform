@@ -1,82 +1,118 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreateTicketForm from "../components/CreateTicketForm";
 import TicketCard from "../components/TicketCard";
-
+//import ticketService from "../services/ticketService";
+import { getTickets } from "../services/ticketService";
 function UserHome() {
-  const [showCreateTicket, setShowCreateTicket] = useState(false);
-
-  // Temporary until GET /api/tickets is implemented
   const [tickets, setTickets] = useState([]);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleTicketCreated = (ticket) => {
-    setTickets((previousTickets) => [ticket, ...previousTickets]);
+  const fetchTickets = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await getTickets();
+
+      setTickets(response.data);
+    } catch (err) {
+      console.error("Failed to fetch tickets:", err);
+      setError("Failed to load tickets.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  const handleTicketCreated = (newTicket) => {
+    setTickets((previousTickets) => [newTicket, ...previousTickets]);
+
+    setShowCreateForm(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
-      <nav className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <nav className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-gray-900">HelpDesk</h1>
 
-            <p className="text-xs text-gray-500">Ticket Management System</p>
+            <p className="text-sm text-gray-500">Ticket Management System</p>
           </div>
 
           <div className="flex items-center gap-4">
-            {/* Temporary fake logged-in user */}
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">John Doe</p>
+            <span className="text-sm text-gray-600">Welcome, User</span>
 
-              <p className="text-xs text-gray-500">User</p>
-            </div>
-
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 font-semibold text-white">
-              J
-            </div>
+            <button className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
+              Logout
+            </button>
           </div>
         </div>
       </nav>
 
       {/* Main content */}
-      <main className="mx-auto max-w-7xl px-6 py-8">
-        <div className="mb-8 flex items-center justify-between">
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">My Tickets</h2>
 
-            <p className="mt-1 text-sm text-gray-500">
-              View and manage your support requests.
+            <p className="text-gray-500 mt-1">
+              Create and manage your support tickets.
             </p>
           </div>
 
           <button
-            onClick={() => setShowCreateTicket(true)}
-            className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+            onClick={() => setShowCreateForm(true)}
+            className="px-5 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
           >
             + Create Ticket
           </button>
         </div>
 
-        {/* Tickets */}
-        {tickets.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
+        {/* Error */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        {/* Loading */}
+        {loading && (
+          <div className="text-center py-12 text-gray-500">
+            Loading tickets...
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!loading && tickets.length === 0 && (
+          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
             <h3 className="text-lg font-semibold text-gray-900">
               No tickets yet
             </h3>
 
-            <p className="mt-2 text-sm text-gray-500">
-              Create your first support ticket to get started.
+            <p className="text-gray-500 mt-2">
+              Create your first support ticket.
             </p>
 
             <button
-              onClick={() => setShowCreateTicket(true)}
-              className="mt-5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              onClick={() => setShowCreateForm(true)}
+              className="mt-5 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               Create Ticket
             </button>
           </div>
-        ) : (
-          <div className="grid gap-4">
+        )}
+
+        {/* Tickets */}
+        {!loading && tickets.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {tickets.map((ticket) => (
               <TicketCard key={ticket.id} ticket={ticket} />
             ))}
@@ -85,11 +121,15 @@ function UserHome() {
       </main>
 
       {/* Create Ticket Modal */}
-      {showCreateTicket && (
-        <CreateTicketForm
-          onTicketCreated={handleTicketCreated}
-          onClose={() => setShowCreateTicket(false)}
-        />
+      {showCreateForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="relative w-full max-w-2xl">
+            <CreateTicketForm
+              onTicketCreated={handleTicketCreated}
+              onClose={() => setShowCreateForm(false)}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

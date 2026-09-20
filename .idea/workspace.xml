@@ -4,7 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d37aca78-7ff3-4e74-aa09-1bd03320566c" name="Changes" comment="" />
+    <list default="true" id="d37aca78-7ff3-4e74-aa09-1bd03320566c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/Ticket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/controller/TicketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/controller/TicketController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateTicketForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateTicketForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/TicketCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/TicketCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/UserHome.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/UserHome.jsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,6 +28,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -24,18 +38,22 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0,
-  "fromUser": false
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0,
+  &quot;fromUser&quot;: false
+}</component>
   <component name="ProjectId" id="3JahdxHvWi58v4fyU2RKC9jUNGA" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Spring Boot.HelpDeskTicketManagementSystemApplication.executor": "Run"
+    "Spring Boot.HelpDeskTicketManagementSystemApplication.executor": "Run",
+    "git-widget-placeholder": "main"
   }
 }]]></component>
   <component name="SharedIndexes">

@@ -59,4 +59,8 @@ public class Ticket {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private Boolean deleted = false;
+
 }

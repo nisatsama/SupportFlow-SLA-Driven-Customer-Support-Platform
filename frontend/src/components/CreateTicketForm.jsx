@@ -29,10 +29,9 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
     setError("");
 
     try {
-      const createdTicket = await createTicket(formData);
+      const response = await createTicket(formData);
 
-      onTicketCreated(createdTicket);
-
+      onTicketCreated(response.data);
       onClose();
     } catch (error) {
       console.error(error);
@@ -118,6 +117,7 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
                                 <option value="Marketing">Marketing</option>
                             </select>
                         </div> */}
+
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Deadline

@@ -10,6 +10,8 @@ import helpdesk.in.HelpDeskTicketManagementSystem.Repository.TicketRepository;
 import helpdesk.in.HelpDeskTicketManagementSystem.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TicketService {
 
@@ -24,6 +26,11 @@ public class TicketService {
         this.userRepository = userRepository;
     }
 
+
+    // =========================
+    // CREATE
+    // =========================
+
     public TicketResponseDto registerTicket(
             CreateTicketRequestDto createTicketRequestDto,
             Long userId
@@ -37,7 +44,10 @@ public class TicketService {
         Ticket ticket = new Ticket();
 
         ticket.setTitle(createTicketRequestDto.getTitle());
-        ticket.setDescription(createTicketRequestDto.getDescription());
+
+        ticket.setDescription(
+                createTicketRequestDto.getDescription()
+        );
 
         ticket.setPriority(
                 createTicketRequestDto.getPriority() != null
@@ -45,8 +55,13 @@ public class TicketService {
                         : TicketPriority.MEDIUM
         );
 
-        ticket.setCategory(createTicketRequestDto.getCategory());
-        ticket.setDeadline(createTicketRequestDto.getDeadline());
+        ticket.setCategory(
+                createTicketRequestDto.getCategory()
+        );
+
+        ticket.setDeadline(
+                createTicketRequestDto.getDeadline()
+        );
 
         ticket.setStatus(TicketStatus.OPEN);
 
@@ -55,19 +70,133 @@ public class TicketService {
         // New tickets are initially unassigned
         ticket.setAssignedTo(null);
 
+        // Important for soft delete
+        ticket.setDeleted(false);
+
         Ticket savedTicket = ticketRepository.save(ticket);
 
         return mapToResponseDto(savedTicket);
     }
 
+
+    // =========================
+    // GET ALL
+    // =========================
+
+    public List<TicketResponseDto> getAllTickets() {
+
+        return ticketRepository.findAllByDeletedFalse()
+                .stream()
+                .map(this::mapToResponseDto)
+                .toList();
+    }
+
+
+    // =========================
+    // GET BY ID
+    // =========================
+
+    public TicketResponseDto getTicket(Long id) {
+
+        Ticket ticket = ticketRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Ticket not found with id: " + id)
+                );
+
+        return mapToResponseDto(ticket);
+    }
+
+
+    // =========================
+    // UPDATE
+    // =========================
+
+    public TicketResponseDto updateTicket(
+            Long id,
+            CreateTicketRequestDto updateRequest
+    ) {
+
+        Ticket ticket = ticketRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Ticket not found with id: " + id)
+                );
+
+        ticket.setTitle(updateRequest.getTitle());
+
+        ticket.setDescription(
+                updateRequest.getDescription()
+        );
+
+        if (updateRequest.getPriority() != null) {
+            ticket.setPriority(
+                    updateRequest.getPriority()
+            );
+        }
+
+        ticket.setCategory(
+                updateRequest.getCategory()
+        );
+
+        ticket.setDeadline(
+                updateRequest.getDeadline()
+        );
+
+        Ticket updatedTicket = ticketRepository.save(ticket);
+
+        return mapToResponseDto(updatedTicket);
+    }
+
+
+    // =========================
+    // HARD DELETE
+    // =========================
+
+    public void deleteTicket(Long id) {
+
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Ticket not found with id: " + id)
+                );
+
+        ticketRepository.delete(ticket);
+    }
+
+
+    // =========================
+    // SOFT DELETE
+    // =========================
+
+    public void softDeleteTicket(Long id) {
+
+        Ticket ticket = ticketRepository.findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Ticket not found with id: " + id)
+                );
+
+        ticket.setDeleted(true);
+
+        ticketRepository.save(ticket);
+    }
+
+
+    // =========================
+    // DTO MAPPER
+    // =========================
+
     private TicketResponseDto mapToResponseDto(Ticket ticket) {
 
         return new TicketResponseDto(
+
                 ticket.getId(),
+
                 ticket.getTitle(),
+
                 ticket.getDescription(),
+
                 ticket.getStatus(),
+
                 ticket.getPriority(),
+
                 ticket.getCategory(),
 
                 // Created By
@@ -89,7 +218,9 @@ public class TicketService {
                         : null,
 
                 ticket.getDeadline(),
+
                 ticket.getCreatedAt(),
+
                 ticket.getUpdatedAt()
         );
     }
