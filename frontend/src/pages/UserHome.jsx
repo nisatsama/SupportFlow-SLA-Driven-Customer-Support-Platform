@@ -114,7 +114,15 @@ function UserHome() {
         {!loading && tickets.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {tickets.map((ticket) => (
-              <TicketCard key={ticket.id} ticket={ticket} />
+              <TicketCard
+                key={ticket.id}
+                ticket={ticket}
+                onDelete={(deletedId) => {
+                  setTickets((prevTickets) =>
+                    prevTickets.filter((ticket) => ticket.id !== deletedId),
+                  );
+                }}
+              />
             ))}
           </div>
         )}

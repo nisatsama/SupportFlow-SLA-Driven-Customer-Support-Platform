@@ -1,12 +1,40 @@
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function TicketCard({ ticket }) {
+function TicketCard({ ticket, onDelete }) {
   const navigate = useNavigate();
 
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    navigate(`/tickets/${ticket.id}/edit`);
+  };
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this ticket?",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await axios.delete(`http://localhost:8080/api/tickets/${ticket.id}`);
+
+      // Remove deleted ticket from parent state
+      if (onDelete) {
+        onDelete(ticket.id);
+      }
+    } catch (error) {
+      console.error("Error deleting ticket:", error);
+      alert("Failed to delete ticket.");
+    }
+  };
+
   return (
-    <button
+    <div
       onClick={() => navigate(`/tickets/${ticket.id}`)}
-      className="w-full rounded-xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
+      className="w-full cursor-pointer rounded-xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
@@ -65,8 +93,27 @@ function TicketCard({ ticket }) {
           Updated:{" "}
           {ticket.updatedAt ? new Date(ticket.updatedAt).toLocaleString() : "-"}
         </span>
+
+        {/* Actions */}
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={handleEdit}
+            className="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-100"
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100"
+          >
+            Delete
+          </button>
+        </div>
       </div>
-    </button>
+    </div>
   );
 }
 
