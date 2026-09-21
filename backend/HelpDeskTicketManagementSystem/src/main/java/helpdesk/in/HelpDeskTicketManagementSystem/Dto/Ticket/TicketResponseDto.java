@@ -14,17 +14,32 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketResponseDto {
+
     private Long id;
+
     private String title;
+
     private String description;
+
     private TicketStatus status;
+
     private TicketPriority priority;
+
     private String category;
+
     private Long createdById;
+
     private String createdByName;
+
     private Long assignedTo;
+
     private String assignedToName;
+
     private LocalDateTime deadline;
+
+    private String imageUrl;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 }

@@ -28,4 +28,6 @@ public class CreateTicketRequestDto {
     @NotNull(message = "Deadline is required")
     @Future(message = "Deadline must be in the future")
     private LocalDateTime deadline;
+
+    private String imageUrl;
 }

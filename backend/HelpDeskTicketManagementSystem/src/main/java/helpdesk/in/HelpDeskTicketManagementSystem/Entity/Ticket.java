@@ -63,4 +63,7 @@ public class Ticket {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean deleted = false;
 
+    @Column(length = 1000)
+    private String imageUrl;
+
 }

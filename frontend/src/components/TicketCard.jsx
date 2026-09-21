@@ -52,6 +52,20 @@ function TicketCard({ ticket, onDelete }) {
         </span>
       </div>
 
+      {/* Ticket Image */}
+      {ticket.imageUrl && (
+        <div className="mt-4 overflow-hidden rounded-lg border border-gray-100 bg-gray-50">
+          <img
+            src={ticket.imageUrl}
+            alt={`Attachment for ${ticket.title}`}
+            className="h-48 w-full object-cover"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
+          />
+        </div>
+      )}
+
       {/* Ticket Information */}
       <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-500">
         <span>
@@ -93,25 +107,25 @@ function TicketCard({ ticket, onDelete }) {
           Updated:{" "}
           {ticket.updatedAt ? new Date(ticket.updatedAt).toLocaleString() : "-"}
         </span>
+      </div>
 
-        {/* Actions */}
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={handleEdit}
-            className="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-100"
-          >
-            Edit
-          </button>
+      {/* Actions */}
+      <div className="mt-3 flex justify-end gap-2">
+        <button
+          type="button"
+          onClick={handleEdit}
+          className="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-medium text-blue-600 hover:bg-blue-100"
+        >
+          Edit
+        </button>
 
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100"
-          >
-            Delete
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={handleDelete}
+          className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-100"
+        >
+          Delete
+        </button>
       </div>
     </div>
   );

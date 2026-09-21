@@ -1,18 +1,30 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 import UserHome from "./pages/UserHome";
-import TicketCard from "./components/TicketCard";
 import EditTicket from "./pages/EditTicket";
+import TicketDetails from "./pages/TicketDetails";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<UserHome />} />
+        {/* First page when opening localhost:5173 */}
+        <Route path="/" element={<Register />} />
 
-        {/* View ticket */}
-        <Route path="/tickets/:id" element={<TicketCard />} />
+        {/* Authentication */}
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
 
-        {/* Edit ticket */}
+        {/* User Home */}
+        <Route path="/user-home" element={<UserHome />} />
+
+        {/* Edit Ticket */}
         <Route path="/tickets/:id/edit" element={<EditTicket />} />
+
+        {/* Unknown routes → Register */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/tickets/:id" element={<TicketDetails />} />
       </Routes>
     </BrowserRouter>
   );

@@ -63,6 +63,11 @@ public class TicketService {
                 createTicketRequestDto.getDeadline()
         );
 
+        // Save Cloudinary URL
+        ticket.setImageUrl(
+                createTicketRequestDto.getImageUrl()
+        );
+
         ticket.setStatus(TicketStatus.OPEN);
 
         ticket.setCreatedBy(creator);
@@ -70,7 +75,7 @@ public class TicketService {
         // New tickets are initially unassigned
         ticket.setAssignedTo(null);
 
-        // Important for soft delete
+        // Soft delete
         ticket.setDeleted(false);
 
         Ticket savedTicket = ticketRepository.save(ticket);
@@ -141,7 +146,14 @@ public class TicketService {
                 updateRequest.getDeadline()
         );
 
+
+        if (updateRequest.getImageUrl() != null) {
+            ticket.setImageUrl(updateRequest.getImageUrl());
+        }
+
         Ticket updatedTicket = ticketRepository.save(ticket);
+
+
 
         return mapToResponseDto(updatedTicket);
     }
@@ -217,10 +229,16 @@ public class TicketService {
                         ? ticket.getAssignedTo().getName()
                         : null,
 
+                // Deadline
                 ticket.getDeadline(),
 
+                // Image URL
+                ticket.getImageUrl(),
+
+                // Created At
                 ticket.getCreatedAt(),
 
+                // Updated At
                 ticket.getUpdatedAt()
         );
     }

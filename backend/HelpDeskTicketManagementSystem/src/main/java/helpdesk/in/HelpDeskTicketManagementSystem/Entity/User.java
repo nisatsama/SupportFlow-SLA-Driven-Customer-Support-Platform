@@ -50,4 +50,8 @@ private LocalDateTime createdAt;
 @UpdateTimestamp
 @Column(nullable = false)
 private LocalDateTime updatedAt;
+
+    public boolean isEnabled() {
+        return true;
+    }
 }
