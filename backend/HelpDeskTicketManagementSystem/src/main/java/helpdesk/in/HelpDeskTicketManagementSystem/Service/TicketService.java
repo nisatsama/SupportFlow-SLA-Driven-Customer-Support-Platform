@@ -1,23 +1,19 @@
 package helpdesk.in.HelpDeskTicketManagementSystem.Service;
-
 import helpdesk.in.HelpDeskTicketManagementSystem.Dto.Ticket.CreateTicketRequestDto;
 import helpdesk.in.HelpDeskTicketManagementSystem.Dto.Ticket.TicketResponseDto;
 import helpdesk.in.HelpDeskTicketManagementSystem.Entity.Ticket;
 import helpdesk.in.HelpDeskTicketManagementSystem.Entity.User;
 import helpdesk.in.HelpDeskTicketManagementSystem.Model.TicketPriority;
 import helpdesk.in.HelpDeskTicketManagementSystem.Model.TicketStatus;
+import helpdesk.in.HelpDeskTicketManagementSystem.Model.UserRole;
 import helpdesk.in.HelpDeskTicketManagementSystem.Repository.TicketRepository;
 import helpdesk.in.HelpDeskTicketManagementSystem.Repository.UserRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-
 @Service
 public class TicketService {
-
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
-
     public TicketService(
             TicketRepository ticketRepository,
             UserRepository userRepository
@@ -25,106 +21,74 @@ public class TicketService {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
     }
-
-
-    // =========================
-    // CREATE
-    // =========================
-
     public TicketResponseDto registerTicket(
             CreateTicketRequestDto createTicketRequestDto,
-            Long userId
+            String email
     ) {
-
-        User creator = userRepository.findById(userId)
+        User creator = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new RuntimeException("User not found.")
                 );
-
         Ticket ticket = new Ticket();
-
         ticket.setTitle(createTicketRequestDto.getTitle());
-
         ticket.setDescription(
                 createTicketRequestDto.getDescription()
         );
-
         ticket.setPriority(
                 createTicketRequestDto.getPriority() != null
                         ? createTicketRequestDto.getPriority()
                         : TicketPriority.MEDIUM
         );
-
         ticket.setCategory(
                 createTicketRequestDto.getCategory()
         );
-
         ticket.setDeadline(
                 createTicketRequestDto.getDeadline()
         );
-
-        // Save Cloudinary URL
         ticket.setImageUrl(
                 createTicketRequestDto.getImageUrl()
         );
-
+        ticket.setRoomNo(
+                createTicketRequestDto.getRoomNo()
+        );
         ticket.setStatus(TicketStatus.OPEN);
-
         ticket.setCreatedBy(creator);
-
-        // New tickets are initially unassigned
-        ticket.setAssignedTo(null);
-
-        // Soft delete
         ticket.setDeleted(false);
-
         Ticket savedTicket = ticketRepository.save(ticket);
-
         return mapToResponseDto(savedTicket);
     }
 
 
-    // =========================
-    // GET ALL
-    // =========================
-
-    public List<TicketResponseDto> getAllTickets() {
-
-        return ticketRepository.findAllByDeletedFalse()
-                .stream()
-                .map(this::mapToResponseDto)
-                .toList();
-    }
-
-
-    // =========================
-    // GET BY ID
-    // =========================
-
-    public TicketResponseDto getTicket(Long id) {
-
-        Ticket ticket = ticketRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Ticket not found with id: " + id)
-                );
-
-        return mapToResponseDto(ticket);
-    }
-
-
-    // =========================
-    // UPDATE
-    // =========================
-
     public TicketResponseDto updateTicket(
             Long id,
-            CreateTicketRequestDto updateRequest
+            CreateTicketRequestDto updateRequest,
+            String email
     ) {
-
-        Ticket ticket = ticketRepository.findByIdAndDeletedFalse(id)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("Ticket not found with id: " + id)
+                        new RuntimeException("User not found.")
                 );
+        Ticket ticket = ticketRepository
+                .findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Ticket not found with id: " + id
+                        )
+                );
+        boolean isPrivileged =
+                user.getRole() == UserRole.ADMIN;
+
+        boolean isOwner =
+                ticket.getCreatedBy() != null &&
+                        ticket.getCreatedBy()
+                                .getId()
+                                .equals(user.getId());
+
+        if (!isPrivileged && !isOwner) {
+            throw new RuntimeException(
+                    "You are not allowed to update this ticket."
+            );
+        }
 
         ticket.setTitle(updateRequest.getTitle());
 
@@ -146,44 +110,148 @@ public class TicketService {
                 updateRequest.getDeadline()
         );
 
-
         if (updateRequest.getImageUrl() != null) {
-            ticket.setImageUrl(updateRequest.getImageUrl());
+            ticket.setImageUrl(
+                    updateRequest.getImageUrl()
+            );
         }
 
-        Ticket updatedTicket = ticketRepository.save(ticket);
 
+        ticket.setRoomNo(
+                updateRequest.getRoomNo()
+        );
 
+        Ticket updatedTicket =
+                ticketRepository.save(ticket);
 
         return mapToResponseDto(updatedTicket);
     }
 
+    public void deleteTicket(Long id, String email) {
 
-    // =========================
-    // HARD DELETE
-    // =========================
-
-    public void deleteTicket(Long id) {
-
-        Ticket ticket = ticketRepository.findById(id)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("Ticket not found with id: " + id)
+                        new RuntimeException("User not found.")
                 );
+
+        Ticket ticket = ticketRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Ticket not found with id: " + id
+                        )
+                );
+
+        boolean isPrivileged =
+                user.getRole() == UserRole.ADMIN ;
+
+        boolean isOwner =
+                ticket.getCreatedBy() != null &&
+                        ticket.getCreatedBy()
+                                .getId()
+                                .equals(user.getId());
+
+        if (!isPrivileged && !isOwner) {
+            throw new RuntimeException(
+                    "You are not allowed to delete this ticket."
+            );
+        }
 
         ticketRepository.delete(ticket);
     }
+    public List<TicketResponseDto> getTicketsForUser(String email) {
 
-
-    // =========================
-    // SOFT DELETE
-    // =========================
-
-    public void softDeleteTicket(Long id) {
-
-        Ticket ticket = ticketRepository.findByIdAndDeletedFalse(id)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("Ticket not found with id: " + id)
+                        new RuntimeException("User not found.")
                 );
+
+        List<Ticket> tickets;
+
+        if (user.getRole() == UserRole.ADMIN) {
+
+            // ADMIN sees all non-deleted tickets
+            tickets = ticketRepository.findAllByDeletedFalse();
+
+        } else {
+
+            // USER sees only tickets created by themselves
+            tickets = ticketRepository
+                    .findByCreatedByAndDeletedFalse(user);
+        }
+
+        return tickets.stream()
+                .map(this::mapToResponseDto)
+                .toList();
+    }
+    public TicketResponseDto getTicketForUser(
+            Long id,
+            String email
+    ) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found.")
+                );
+
+        Ticket ticket = ticketRepository
+                .findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Ticket not found with id: " + id
+                        )
+                );
+
+        boolean isPrivileged =
+                user.getRole() == UserRole.ADMIN ;
+
+        boolean isOwner =
+                ticket.getCreatedBy() != null &&
+                        ticket.getCreatedBy()
+                                .getId()
+                                .equals(user.getId());
+
+        if (!isPrivileged && !isOwner) {
+            throw new RuntimeException(
+                    "You are not allowed to access this ticket."
+            );
+        }
+
+        return mapToResponseDto(ticket);
+    }
+
+    public void softDeleteTicket(
+            Long id,
+            String email
+    ) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found.")
+                );
+
+        Ticket ticket = ticketRepository
+                .findByIdAndDeletedFalse(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Ticket not found with id: " + id
+                        )
+                );
+
+        boolean isPrivileged =
+                user.getRole() == UserRole.ADMIN;
+
+        boolean isOwner =
+                ticket.getCreatedBy() != null &&
+                        ticket.getCreatedBy()
+                                .getId()
+                                .equals(user.getId());
+
+        if (!isPrivileged && !isOwner) {
+            throw new RuntimeException(
+                    "You are not allowed to delete this ticket."
+            );
+        }
 
         ticket.setDeleted(true);
 
@@ -191,9 +259,6 @@ public class TicketService {
     }
 
 
-    // =========================
-    // DTO MAPPER
-    // =========================
 
     private TicketResponseDto mapToResponseDto(Ticket ticket) {
 
@@ -220,16 +285,7 @@ public class TicketService {
                         ? ticket.getCreatedBy().getName()
                         : null,
 
-                // Assigned To
-                ticket.getAssignedTo() != null
-                        ? ticket.getAssignedTo().getId()
-                        : null,
 
-                ticket.getAssignedTo() != null
-                        ? ticket.getAssignedTo().getName()
-                        : null,
-
-                // Deadline
                 ticket.getDeadline(),
 
                 // Image URL
@@ -239,7 +295,27 @@ public class TicketService {
                 ticket.getCreatedAt(),
 
                 // Updated At
-                ticket.getUpdatedAt()
+                ticket.getUpdatedAt(),
+
+                ticket.getRoomNo()
         );
+    }
+    public TicketResponseDto updateStatus(
+            Long ticketId,
+            TicketStatus status
+    ) {
+        Ticket ticket = ticketRepository
+                .findByIdAndDeletedFalse(ticketId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Ticket not found with id: " + ticketId
+                        )
+                );
+
+        ticket.setStatus(status);
+
+        Ticket updatedTicket = ticketRepository.save(ticket);
+
+        return mapToResponseDto(updatedTicket);
     }
 }

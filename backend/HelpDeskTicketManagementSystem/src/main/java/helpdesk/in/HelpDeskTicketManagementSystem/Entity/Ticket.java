@@ -11,6 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -45,9 +47,6 @@ public class Ticket {
     @JoinColumn(name = "created_id", nullable = false)
     private User createdBy;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_agent_id")
-    private User assignedTo;
 
     @Column(name = "deadline", nullable = false)
     private LocalDateTime deadline;
@@ -65,5 +64,15 @@ public class Ticket {
 
     @Column(length = 1000)
     private String imageUrl;
+
+    @Column(length=4)
+    private Integer roomNo;
+    @OneToMany(
+            mappedBy = "ticket",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @OrderBy("createdAt ASC")
+    private List<TicketMessage> messages = new ArrayList<>();
 
 }

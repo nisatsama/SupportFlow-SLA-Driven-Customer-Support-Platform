@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 function TicketCard({ ticket, onDelete }) {
   const navigate = useNavigate();
+  const statusStyles = {
+    OPEN: "bg-blue-100 text-blue-700",
+    "IN PROGRESS": "bg-yellow-100 text-yellow-700",
+    "ON HOLD": "bg-orange-100 text-orange-700",
+    CLOSED: "bg-gray-100 text-gray-700",
+    RESOLVED: "bg-green-100 text-green-700",
+  };
 
   const handleEdit = (e) => {
     e.stopPropagation();
@@ -47,7 +54,12 @@ function TicketCard({ ticket, onDelete }) {
         </div>
 
         {/* Status */}
-        <span className="shrink-0 rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700">
+        <span
+          className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
+            statusStyles[ticket.status?.toUpperCase()] ||
+            "bg-gray-100 text-gray-700"
+          }`}
+        >
           {ticket.status}
         </span>
       </div>
@@ -76,14 +88,15 @@ function TicketCard({ ticket, onDelete }) {
           <strong className="text-gray-700">Category:</strong> {ticket.category}
         </span>
 
+        {/* Room Number */}
         <span>
-          <strong className="text-gray-700">Created By:</strong>{" "}
-          {ticket.createdByName || `User #${ticket.createdById}`}
+          <strong className="text-gray-700">Room No:</strong>{" "}
+          {ticket.roomNo ?? "Not specified"}
         </span>
 
         <span>
-          <strong className="text-gray-700">Assigned To:</strong>{" "}
-          {ticket.assignedToName || "Unassigned"}
+          <strong className="text-gray-700">Created By:</strong>{" "}
+          {ticket.createdByName || `User #${ticket.createdById}`}
         </span>
 
         <span>

@@ -30,4 +30,5 @@ public class CreateTicketRequestDto {
     private LocalDateTime deadline;
 
     private String imageUrl;
+    private Integer roomNo;
 }

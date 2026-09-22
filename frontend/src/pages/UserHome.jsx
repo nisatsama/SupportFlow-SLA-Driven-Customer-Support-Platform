@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import CreateTicketForm from "../components/CreateTicketForm";
 import TicketCard from "../components/TicketCard";
-//import ticketService from "../services/ticketService";
 import { getTickets } from "../services/ticketService";
+
 function UserHome() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [tickets, setTickets] = useState([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -25,14 +30,24 @@ function UserHome() {
     }
   };
 
+  // Fetch tickets when UserHome loads
+  // and whenever the route changes back to this page.
   useEffect(() => {
     fetchTickets();
-  }, []);
+  }, [location.pathname]);
 
   const handleTicketCreated = (newTicket) => {
     setTickets((previousTickets) => [newTicket, ...previousTickets]);
 
     setShowCreateForm(false);
+  };
+
+  // Logout
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -49,7 +64,10 @@ function UserHome() {
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-600">Welcome, User</span>
 
-            <button className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+            >
               Logout
             </button>
           </div>

@@ -18,29 +18,22 @@ public class DataInitializer {
     ) {
         return args -> {
 
-            if (userRepository.findByEmail("admin@helpdesk.com").isEmpty()) {
+            User admin = userRepository
+                    .findByEmail("admin@helpdesk.com")
+                    .orElseGet(User::new);
 
-                User admin = new User();
+            admin.setName("System Admin");
+            admin.setEmail("admin@helpdesk.com");
+            admin.setPassword(
+                    passwordEncoder.encode("admin123")
+            );
+            admin.setRole(UserRole.ADMIN);
 
-                admin.setName("System Admin");
-                admin.setEmail("admin@helpdesk.com");
-                admin.setPassword(passwordEncoder.encode("admin123"));
-                admin.setRole(UserRole.ADMIN);
+            userRepository.save(admin);
 
-                userRepository.save(admin);
-            }
-
-            if (userRepository.findByEmail("agent@helpdesk.com").isEmpty()) {
-
-                User agent = new User();
-
-                agent.setName("Support Agent");
-                agent.setEmail("agent@helpdesk.com");
-                agent.setPassword(passwordEncoder.encode("agent123"));
-                agent.setRole(UserRole.AGENT);
-
-                userRepository.save(agent);
-            }
+            System.out.println(
+                    "Admin account ready: admin@helpdesk.com"
+            );
         };
     }
 }

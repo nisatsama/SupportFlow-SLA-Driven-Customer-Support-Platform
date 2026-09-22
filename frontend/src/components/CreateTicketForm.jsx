@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-
 import { createTicket } from "../services/ticketService";
 
 function CreateTicketForm({ onTicketCreated, onClose }) {
@@ -10,11 +9,11 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
     priority: "LOW",
     category: "",
     deadline: "",
+    roomNo: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -34,13 +33,11 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
 
     if (!file) return;
 
-    // Check file type
     if (!file.type.startsWith("image/")) {
       setError("Please select an image file.");
       return;
     }
 
-    // Maximum 5MB
     if (file.size > 5 * 1024 * 1024) {
       setError("Image size must be less than 5MB.");
       return;
@@ -48,8 +45,6 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
 
     setError("");
     setImage(file);
-
-    // Create preview
     setImagePreview(URL.createObjectURL(file));
   };
 
@@ -102,7 +97,6 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
         setUploading(true);
 
         const uploadData = new FormData();
-
         uploadData.append("file", image);
 
         const uploadResponse = await axios.post(
@@ -117,7 +111,6 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
         );
 
         imageUrl = uploadResponse.data;
-
         setUploading(false);
       }
 
@@ -219,7 +212,6 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
             >
               {imagePreview ? (
                 <div className="relative w-full">
-                  {/* Image Preview */}
                   <img
                     src={imagePreview}
                     alt="Selected preview"
@@ -234,7 +226,6 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
                 </div>
               ) : (
                 <>
-                  {/* Upload Icon */}
                   <svg
                     className="mb-3 h-10 w-10 text-gray-400"
                     fill="none"
@@ -270,7 +261,6 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
               />
             </label>
 
-            {/* Remove Image */}
             {image && (
               <button
                 type="button"
@@ -313,6 +303,23 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
                 onChange={handleChange}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 placeholder="e.g. Software, Hardware"
+              />
+            </div>
+
+            {/* Room No */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Room No.
+              </label>
+
+              <input
+                type="text"
+                name="roomNo"
+                value={formData.roomNo}
+                onChange={handleChange}
+                required
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                placeholder="e.g. 204"
               />
             </div>
 

@@ -31,10 +31,6 @@ public class TicketResponseDto {
 
     private String createdByName;
 
-    private Long assignedTo;
-
-    private String assignedToName;
-
     private LocalDateTime deadline;
 
     private String imageUrl;
@@ -42,4 +38,6 @@ public class TicketResponseDto {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private Integer roomNo;
 }
