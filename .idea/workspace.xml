@@ -5,23 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d37aca78-7ff3-4e74-aa09-1bd03320566c" name="Changes" comment="add crud">
+      <change afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Message/CreateMessageRequestDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Message/TicketMessageResponseDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/TicketMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketMessageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketMessageService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/controller/TicketMessageController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Status/UpdateTicketStatusRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Status/UpdateTicketStatusRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Ticket/CreateTicketRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Ticket/CreateTicketRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Ticket/TicketResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Ticket/TicketResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/Ticket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Model/UserRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Model/UserRole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/DataInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/controller/TicketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/controller/TicketController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/axios.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/axios.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateTicketForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateTicketForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/TicketCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/TicketCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/UserHome.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/UserHome.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Dto/Assignment/AssignTicketRequestDto.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +22,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -123,7 +115,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790008438989</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add crud">
+      <option name="closed" value="true" />
+      <created>1790096468429</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1790096468430</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
