@@ -10,7 +10,11 @@ function TicketCard({ ticket, onDelete }) {
     CLOSED: "bg-gray-100 text-gray-700",
     RESOLVED: "bg-green-100 text-green-700",
   };
-
+const priorityStyles = {
+  LOW: "bg-green-100 text-green-700",
+  MEDIUM: "bg-yellow-100 text-yellow-700",
+  HIGH: "bg-red-100 text-red-700",
+};
   const handleEdit = (e) => {
     e.stopPropagation();
     navigate(`/tickets/${ticket.id}/edit`);
@@ -80,9 +84,17 @@ function TicketCard({ ticket, onDelete }) {
 
       {/* Ticket Information */}
       <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-500">
-        <span>
-          <strong className="text-gray-700">Priority:</strong> {ticket.priority}
-        </span>
+        <span className="flex items-center gap-2">
+  <strong className="text-gray-700">Priority:</strong>
+  <span
+    className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+      priorityStyles[ticket.priority?.toUpperCase()] ||
+      "bg-gray-100 text-gray-700"
+    }`}
+  >
+    {ticket.priority}
+  </span>
+</span>
 
         <span>
           <strong className="text-gray-700">Category:</strong> {ticket.category}
