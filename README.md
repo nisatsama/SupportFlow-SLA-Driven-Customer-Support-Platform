@@ -1,5 +1,7 @@
 ## Quick Start
+## Local Development
 
+The backend runs on Spring Boot and PostgreSQL. The frontend is built with React and Vite.
 ### Prerequisites
 
 - Java 24+
