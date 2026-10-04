@@ -1,4 +1,19 @@
+## Quick Start
+## Local Development
 
+The backend runs on Spring Boot and PostgreSQL. The frontend is built with React and Vite.
+### Prerequisites
+
+- Java 24+
+- PostgreSQL
+- Node.js 18+
+- npm
+
+### Backend
+
+```bash
+cd backend
+./mvnw spring-boot:run
 ```
 SE
 ├─ .idea
