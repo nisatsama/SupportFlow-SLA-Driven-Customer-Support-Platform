@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d37aca78-7ff3-4e74-aa09-1bd03320566c" name="Changes" comment="add crud">
+    <list default="true" id="d37aca78-7ff3-4e74-aa09-1bd03320566c" name="Changes" comment="complete rbac">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Model/UserRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Model/UserRole.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/DataInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/Ticket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +137,15 @@
       <option name="project" value="LOCAL" />
       <updated>1790152218234</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="complete rbac">
+      <option name="closed" value="true" />
+      <created>1791394927118</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1791394927118</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,6 +153,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add crud" />
-    <option name="LAST_COMMIT_MESSAGE" value="add crud" />
+    <MESSAGE value="complete rbac" />
+    <option name="LAST_COMMIT_MESSAGE" value="complete rbac" />
   </component>
 </project>

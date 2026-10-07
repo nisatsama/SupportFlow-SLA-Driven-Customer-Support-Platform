@@ -19,4 +19,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             Long id,
             User createdBy
     );
+    List<Ticket> findByAssignedAgentId(Long agentId);
+    List<Ticket> findByCreatedById(Long userId);
 }
