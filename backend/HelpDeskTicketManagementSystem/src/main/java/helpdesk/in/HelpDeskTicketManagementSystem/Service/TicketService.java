@@ -8,6 +8,7 @@ import helpdesk.in.HelpDeskTicketManagementSystem.Model.TicketStatus;
 import helpdesk.in.HelpDeskTicketManagementSystem.Model.UserRole;
 import helpdesk.in.HelpDeskTicketManagementSystem.Repository.TicketRepository;
 import helpdesk.in.HelpDeskTicketManagementSystem.Repository.UserRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
@@ -21,6 +22,7 @@ public class TicketService {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
     }
+    @PreAuthorize("hasRole('USER')")
     public TicketResponseDto registerTicket(
             CreateTicketRequestDto createTicketRequestDto,
             String email

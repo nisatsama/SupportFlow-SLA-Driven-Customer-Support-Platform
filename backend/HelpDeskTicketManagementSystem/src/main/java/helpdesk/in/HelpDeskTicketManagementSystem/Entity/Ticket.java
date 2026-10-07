@@ -74,5 +74,7 @@ public class Ticket {
     )
     @OrderBy("createdAt ASC")
     private List<TicketMessage> messages = new ArrayList<>();
-
+    @ManyToOne
+    @JoinColumn(name = "assigned_agent_id")
+    private User assignedAgent;
 }

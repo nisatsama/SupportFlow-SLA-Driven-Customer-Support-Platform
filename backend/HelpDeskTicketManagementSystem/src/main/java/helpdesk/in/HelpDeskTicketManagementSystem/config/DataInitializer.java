@@ -17,7 +17,6 @@ public class DataInitializer {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
-
             User admin = userRepository
                     .findByEmail("admin@helpdesk.com")
                     .orElseGet(User::new);
@@ -33,6 +32,22 @@ public class DataInitializer {
 
             System.out.println(
                     "Admin account ready: admin@helpdesk.com"
+            );
+            User agent = userRepository
+                    .findByEmail("agent@helpdesk.com")
+                    .orElseGet(User::new);
+
+            agent.setName("Support Agent");
+            agent.setEmail("agent@helpdesk.com");
+            agent.setPassword(
+                    passwordEncoder.encode("agent123")
+            );
+            agent.setRole(UserRole.AGENT);
+
+            userRepository.save(agent);
+
+            System.out.println(
+                    "Agent account ready: agent@helpdesk.com"
             );
         };
     }
