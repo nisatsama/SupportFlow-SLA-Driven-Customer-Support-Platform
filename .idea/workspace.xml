@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d37aca78-7ff3-4e74-aa09-1bd03320566c" name="Changes" comment="add crud">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Model/UserRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Model/UserRole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/config/DataInitializer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +64,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "Spring Boot.HelpDeskTicketManagementSystemApplication.executor": "Run",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "feature/1-ticket-priority-badge",
+    "git-widget-placeholder": "feat/yolo-demo",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
