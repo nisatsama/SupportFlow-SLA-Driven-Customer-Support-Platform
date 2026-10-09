@@ -6,11 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d37aca78-7ff3-4e74-aa09-1bd03320566c" name="Changes" comment="complete rbac">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Entity/Ticket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/TicketRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/TicketService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/HelpDeskTicketManagementSystem/src/main/java/helpdesk/in/HelpDeskTicketManagementSystem/Service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,20 +54,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.HelpDeskTicketManagementSystemApplication.executor": "Run",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "feat/yolo-demo",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.HelpDeskTicketManagementSystemApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/yolo-demo&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -145,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791394927118</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="complete rbac">
+      <option name="closed" value="true" />
+      <created>1791395947786</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1791395947786</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

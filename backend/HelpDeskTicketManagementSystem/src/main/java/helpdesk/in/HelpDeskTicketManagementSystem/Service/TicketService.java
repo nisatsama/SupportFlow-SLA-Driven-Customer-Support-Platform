@@ -186,6 +186,8 @@ public class TicketService {
                 .map(this::mapToResponseDto)
                 .toList();
     }
+
+    @PreAuthorize("authenticated()")
     public TicketResponseDto getTicketForUser(
             Long id,
             String email
@@ -319,5 +321,9 @@ public class TicketService {
         Ticket updatedTicket = ticketRepository.save(ticket);
 
         return mapToResponseDto(updatedTicket);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public void assignAgent(Long ticketId, Long agentId) {
+    ...
     }
 }
