@@ -1,5 +1,5 @@
-package helpdesk.in.HelpDeskTicketManagementSystem.Dto.TicketMessage;
-
+//package helpdesk.in.HelpDeskTicketManagementSystem.Dto.TicketMessage;
+package helpdesk.in.HelpDeskTicketManagementSystem.Dto.Message;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

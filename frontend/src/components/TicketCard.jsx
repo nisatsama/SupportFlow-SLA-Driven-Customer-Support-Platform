@@ -1,5 +1,5 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 function TicketCard({ ticket, onDelete }) {
   const navigate = useNavigate();
@@ -30,9 +30,8 @@ const priorityStyles = {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`http://localhost:8080/api/tickets/${ticket.id}`);
+      await api.delete(`/tickets/${ticket.id}`);
 
-      // Remove deleted ticket from parent state
       if (onDelete) {
         onDelete(ticket.id);
       }

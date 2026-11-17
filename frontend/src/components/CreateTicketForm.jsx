@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import { createTicket } from "../services/ticketService";
 
 function CreateTicketForm({ onTicketCreated, onClose }) {
@@ -99,16 +99,11 @@ function CreateTicketForm({ onTicketCreated, onClose }) {
         const uploadData = new FormData();
         uploadData.append("file", image);
 
-        const uploadResponse = await axios.post(
-          "http://localhost:8080/api/uploads/image",
-          uploadData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
+        const uploadResponse = await api.post("/uploads/image", uploadData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
           },
-        );
+        });
 
         imageUrl = uploadResponse.data;
         setUploading(false);
