@@ -322,8 +322,31 @@ public class TicketService {
 
         return mapToResponseDto(updatedTicket);
     }
-    @PreAuthorize("hasRole('ADMIN')")
-    public void assignAgent(Long ticketId, Long agentId) {
-    ...
+    
+@PreAuthorize("hasRole('ADMIN')")
+public void assignAgent(Long ticketId, Long agentId) {
+
+    Ticket ticket = ticketRepository
+            .findByIdAndDeletedFalse(ticketId)
+            .orElseThrow(() ->
+                    new RuntimeException("Ticket not found.")
+            );
+
+    User agent = userRepository
+            .findById(agentId)
+            .orElseThrow(() ->
+                    new RuntimeException("Agent not found.")
+            );
+
+    if (agent.getRole() != UserRole.AGENT) {
+        throw new RuntimeException(
+                "Selected user is not a support agent."
+        );
     }
+
+    ticket.setAssignedAgent(agent);
+
+    ticketRepository.save(ticket);
+}
+
 }
