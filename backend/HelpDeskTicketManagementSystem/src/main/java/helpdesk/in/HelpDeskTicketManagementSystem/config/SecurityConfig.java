@@ -1,5 +1,6 @@
 package helpdesk.in.HelpDeskTicketManagementSystem.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -32,32 +33,19 @@ public class SecurityConfig {
 
         http
                 .cors(Customizer.withDefaults())
-
                 .csrf(csrf -> csrf.disable())
-
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        )
-                )
-
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication required"))
+                        .accessDeniedHandler((request, response, accessDeniedException) ->
+                                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied")))
                 .authorizeHttpRequests(auth -> auth
-
-                        // Authentication endpoints are public
-                        .requestMatchers("/api/auth/**").permitAll()
-
-                        // Everything else requires JWT
-                        .anyRequest().authenticated()
-                )
-
+                        .requestMatchers("/api/auth/**", "/error").permitAll()
+                        .anyRequest().authenticated())
                 .formLogin(form -> form.disable())
-
                 .httpBasic(basic -> basic.disable())
-
-                .addFilterBefore(
-                        jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

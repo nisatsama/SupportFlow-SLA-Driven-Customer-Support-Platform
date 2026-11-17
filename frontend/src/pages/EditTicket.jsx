@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import api from "../api/axios";
 
 function EditTicket() {
   const { id } = useParams();
@@ -31,20 +32,8 @@ function EditTicket() {
   useEffect(() => {
     const fetchTicket = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8080/api/tickets/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch ticket");
-        }
-
-        const ticket = await response.json();
+        const response = await api.get(`/tickets/${id}`);
+        const ticket = response.data;
 
         const formattedDeadline = ticket.deadline
           ? ticket.deadline.slice(0, 16)
@@ -212,34 +201,15 @@ function EditTicket() {
         imageUrl = await uploadImageToCloudinary();
       }
 
-      const response = await fetch(`http://localhost:8080/api/tickets/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-
-        body: JSON.stringify({
-          title: formData.title,
-          description: formData.description,
-          priority: formData.priority,
-          category: formData.category,
-          deadline: formData.deadline,
-
-          // Room number
-          roomNo: formData.roomNo,
-
-          imageUrl: imageUrl,
-        }),
+      await api.put(`/tickets/${id}`, {
+        title: formData.title,
+        description: formData.description,
+        priority: formData.priority,
+        category: formData.category,
+        deadline: formData.deadline,
+        roomNo: formData.roomNo,
+        imageUrl: imageUrl,
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-
-        console.error("Backend error:", errorText);
-
-        throw new Error("Failed to update ticket");
-      }
 
       alert("Ticket updated successfully.");
 

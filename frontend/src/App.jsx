@@ -5,26 +5,55 @@ import Login from "./pages/Login";
 import UserHome from "./pages/UserHome";
 import EditTicket from "./pages/EditTicket";
 import TicketDetails from "./pages/TicketDetails";
+
+const isAuthenticated = () => Boolean(localStorage.getItem("token"));
+
+function ProtectedRoute({ children }) {
+  return isAuthenticated() ? children : <Navigate to="/login" replace />;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* First page when opening localhost:5173 */}
-        <Route path="/" element={<Register />} />
+        <Route
+          path="/"
+          element={
+            isAuthenticated() ? <Navigate to="/user-home" replace /> : <Navigate to="/login" replace />
+          }
+        />
 
-        {/* Authentication */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        {/* User Home */}
-        <Route path="/user-home" element={<UserHome />} />
+        <Route
+          path="/user-home"
+          element={
+            <ProtectedRoute>
+              <UserHome />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Edit Ticket */}
-        <Route path="/tickets/:id/edit" element={<EditTicket />} />
+        <Route
+          path="/tickets/:id/edit"
+          element={
+            <ProtectedRoute>
+              <EditTicket />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Unknown routes → Register */}
+        <Route
+          path="/tickets/:id"
+          element={
+            <ProtectedRoute>
+              <TicketDetails />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/tickets/:id" element={<TicketDetails />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import api, { getRoleFromToken } from "../api/axios";
 import { getMessages, sendMessage } from "../services/MessageService";
 
 function TicketDetails() {
@@ -17,37 +17,9 @@ function TicketDetails() {
   const [sendingMessage, setSendingMessage] = useState(false);
   const [messagesLoading, setMessagesLoading] = useState(true);
 
-  /*
-   * Get logged-in user's role from JWT
-   */
-  const token = localStorage.getItem("token");
-
-  let role = null;
-
-  if (token) {
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-
-      console.log("JWT Payload:", payload);
-
-      role =
-        payload.role ||
-        payload.roles ||
-        payload.authority ||
-        payload.authorities?.[0] ||
-        null;
-
-      console.log("Detected role:", role);
-    } catch (error) {
-      console.error("Failed to decode JWT:", error);
-    }
-  }
-
+  const role = getRoleFromToken();
   const normalizedRole = role?.toString().toUpperCase();
-
   const isAdmin = normalizedRole === "ADMIN" || normalizedRole === "ROLE_ADMIN";
-
-  console.log("Is Admin:", isAdmin);
 
   /*
    * Fetch ticket details
@@ -57,14 +29,7 @@ function TicketDetails() {
       setLoading(true);
       setError("");
 
-      const response = await axios.get(
-        `http://localhost:8080/api/tickets/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
-      );
+      const response = await api.get(`/tickets/${id}`);
 
       setTicket(response.data);
     } catch (error) {
@@ -115,17 +80,9 @@ function TicketDetails() {
     if (!ticket) return;
 
     try {
-      const response = await axios.patch(
-        `http://localhost:8080/api/tickets/${ticket.id}/status`,
-        {
-          status: newStatus,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        },
-      );
+      const response = await api.patch(`/tickets/${ticket.id}/status`, {
+        status: newStatus,
+      });
 
       setTicket(response.data);
 
@@ -195,11 +152,7 @@ function TicketDetails() {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`http://localhost:8080/api/tickets/${ticket.id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      await api.delete(`/tickets/${ticket.id}`);
 
       navigate("/user-home");
     } catch (error) {

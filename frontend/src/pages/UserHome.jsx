@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { clearAuthState } from "../api/axios";
 import CreateTicketForm from "../components/CreateTicketForm";
 import TicketCard from "../components/TicketCard";
 import { getTickets } from "../services/ticketService";
@@ -44,9 +45,7 @@ function UserHome() {
 
   // Logout
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-
+    clearAuthState();
     navigate("/login", { replace: true });
   };
 

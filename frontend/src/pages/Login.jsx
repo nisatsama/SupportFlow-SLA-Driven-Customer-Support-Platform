@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 
 function Login() {
   const navigate = useNavigate();
@@ -29,32 +29,28 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
-        formData,
-      );
+      const response = await api.post("/auth/login", formData);
 
       const token = response.data.token;
 
-      // Save JWT
       localStorage.setItem("token", token);
 
-      // Decode JWT
       const payload = JSON.parse(
         atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
       );
 
-      // Save role
       localStorage.setItem("role", payload.role);
+      localStorage.setItem("user", JSON.stringify({
+        email: payload.sub,
+        role: payload.role,
+      }));
 
-      console.log("Logged in user:", payload.sub);
-      console.log("Logged in role:", payload.role);
-
-      // Both ADMIN and USER go to the same dashboard
       navigate("/user-home");
     } catch (err) {
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
+      const message = err.response?.data?.message || err.response?.data?.error;
+
+      if (message) {
+        setError(message);
       } else if (err.response?.status === 401) {
         setError("Invalid email or password.");
       } else {
