@@ -1,3 +1,4 @@
+
 package helpdesk.in.HelpDeskTicketManagementSystem.config;
 
 import helpdesk.in.HelpDeskTicketManagementSystem.Entity.User;
@@ -6,49 +7,49 @@ import helpdesk.in.HelpDeskTicketManagementSystem.Repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 
 @Configuration
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner initializeUsers(
+    CommandLineRunner initializeAdmin(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            Environment environment
     ) {
         return args -> {
-            User admin = userRepository
-                    .findByEmail("admin@helpdesk.com")
-                    .orElseGet(User::new);
+            String email = environment.getProperty("ADMIN_EMAIL");
+            String password = environment.getProperty("ADMIN_PASSWORD");
 
-            admin.setName("System Admin");
-            admin.setEmail("admin@helpdesk.com");
-            admin.setPassword(
-                    passwordEncoder.encode("admin123")
+            // Do not create a default administrator account.
+            if (!StringUtils.hasText(email)
+                    || !StringUtils.hasText(password)) {
+                System.out.println(
+                        "Admin bootstrap skipped: credentials not configured."
+                );
+                return;
+            }
+
+            // Never overwrite an existing administrator's password.
+            if (userRepository.findByEmail(email).isPresent()) {
+                System.out.println("Admin account already exists.");
+                return;
+            }
+
+            User admin = new User();
+            admin.setName(
+                    environment.getProperty("ADMIN_NAME", "System Admin")
             );
+            admin.setEmail(email);
+            admin.setPassword(passwordEncoder.encode(password));
             admin.setRole(UserRole.ADMIN);
 
             userRepository.save(admin);
 
-            System.out.println(
-                    "Admin account ready: admin@helpdesk.com"
-            );
-            User agent = userRepository
-                    .findByEmail("agent@helpdesk.com")
-                    .orElseGet(User::new);
-
-            agent.setName("Support Agent");
-            agent.setEmail("agent@helpdesk.com");
-            agent.setPassword(
-                    passwordEncoder.encode("agent123")
-            );
-            agent.setRole(UserRole.AGENT);
-
-            userRepository.save(agent);
-
-            System.out.println(
-                    "Agent account ready: agent@helpdesk.com"
-            );
+            System.out.println("Initial administrator account created.");
         };
     }
 }
