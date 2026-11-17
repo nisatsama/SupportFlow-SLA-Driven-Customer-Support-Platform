@@ -408,6 +408,10 @@ SupportFlow uses separate deployment environments for its frontend and backend.
 - Escalation workflows for overdue tickets.
 - Comprehensive integration and end-to-end testing.
 
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://supportflow-flax.vercel.app/)
+[![Backend](https://img.shields.io/badge/Backend-API-blue?style=for-the-badge)](https://supportflow-sla-driven-customer-support.onrender.com/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge)](https://github.com/nisatsama/SupportFlow-SLA-Driven-Customer-Support-Platform)
+
 ## Author
 
 **Nisat Sama**
