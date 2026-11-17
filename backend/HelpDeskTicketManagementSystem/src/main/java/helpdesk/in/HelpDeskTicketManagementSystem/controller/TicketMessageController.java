@@ -1,7 +1,8 @@
 package helpdesk.in.HelpDeskTicketManagementSystem.controller;
 
 import helpdesk.in.HelpDeskTicketManagementSystem.Dto.Message.CreateMessageRequestDto;
-import helpdesk.in.HelpDeskTicketManagementSystem.Dto.TicketMessage.TicketMessageResponseDto;
+import helpdesk.in.HelpDeskTicketManagementSystem.Dto.Message.TicketMessageResponseDto;
+//import helpdesk.in.HelpDeskTicketManagementSystem.Dto.TicketMessage.TicketMessageResponseDto;
 import helpdesk.in.HelpDeskTicketManagementSystem.Service.TicketMessageService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
